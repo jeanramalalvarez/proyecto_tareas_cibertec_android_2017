@@ -6,7 +6,7 @@ import pe.edu.cibertec.tareas.dominio.model.Tarea;
 
 public interface TareaRepositorio {
 
-    List<Tarea> listarTareas() throws Exception;
+    List<Tarea> listarTareas( boolean forzarred) throws Exception;
 
     Tarea guardarTarea(Tarea tarea) throws Exception;
 

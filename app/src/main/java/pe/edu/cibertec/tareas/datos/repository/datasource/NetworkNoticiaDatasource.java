@@ -2,6 +2,7 @@ package pe.edu.cibertec.tareas.datos.repository.datasource;
 
 import java.util.List;
 
+import pe.edu.cibertec.tareas.datos.database.TareaCache;
 import pe.edu.cibertec.tareas.datos.entity.TareaEntity;
 import pe.edu.cibertec.tareas.datos.network.RestApi;
 
@@ -9,13 +10,18 @@ public class NetworkNoticiaDatasource implements TareaDatasource {
 
     private final RestApi restApi;
 
-    public NetworkNoticiaDatasource(RestApi restApi) {
+    private  final TareaCache tareaCache;
+
+    public NetworkNoticiaDatasource(RestApi restApi, TareaCache tareaCache) {
         this.restApi = restApi;
+        this.tareaCache = tareaCache;
     }
 
     @Override
     public List<TareaEntity> listarTareas() throws Exception {
-        return restApi.listarTareas();
+        List<TareaEntity> list = restApi.listarTareas();
+        tareaCache.guardar(list);
+        return list;
     }
 
     @Override

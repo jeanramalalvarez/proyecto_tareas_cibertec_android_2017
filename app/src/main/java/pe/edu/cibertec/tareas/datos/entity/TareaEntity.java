@@ -5,8 +5,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class TareaEntity {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
+public class TareaEntity extends RealmObject {
+
+    @PrimaryKey
     @SerializedName("objectId")
     private String id;
 

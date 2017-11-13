@@ -11,6 +11,7 @@ import pe.edu.cibertec.tareas.dominio.model.Tarea;
 import pe.edu.cibertec.tareas.dominio.repository.TareaRepositorio;
 import pe.edu.cibertec.tareas.dominio.usercase.ListarTareas;
 import pe.edu.cibertec.tareas.dominio.usercase.UseCase;
+import pe.edu.cibertec.tareas.presentacion.NetworkUtils;
 import pe.edu.cibertec.tareas.presentacion.model.mapper.TareaModelDataMapper;
 import pe.edu.cibertec.tareas.presentacion.view.view.TareasView;
 
@@ -39,6 +40,8 @@ public class TareasPresenter extends BasePresenter<TareasView> {
 
     public void listarTareas() {
         view.mostrarLoading();
+
+        listarTareas.setForzarred(NetworkUtils.HayInternet(view.context()));
 
         listarTareas.ejecutar(new UseCase.Callback<List<Tarea>>() {
             @Override

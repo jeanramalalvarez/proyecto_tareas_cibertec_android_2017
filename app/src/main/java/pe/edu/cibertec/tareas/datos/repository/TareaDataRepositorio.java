@@ -21,8 +21,8 @@ public class TareaDataRepositorio implements TareaRepositorio {
     }
 
     @Override
-    public List<Tarea> listarTareas() throws Exception {
-        final TareaDatasource tareaDatasource = noticiaDatasourceFactory.crearNetworkDatasource();
+    public List<Tarea> listarTareas(boolean forzarred) throws Exception {
+        final TareaDatasource tareaDatasource = noticiaDatasourceFactory.crear(forzarred);
         List<TareaEntity> tareaEntityList = tareaDatasource.listarTareas();
         return noticiaEntityDataMapper.transformar(tareaEntityList);
     }

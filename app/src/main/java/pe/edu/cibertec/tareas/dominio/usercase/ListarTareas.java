@@ -12,6 +12,8 @@ public class ListarTareas extends UseCase<List<Tarea>> {
 
     private final TareaRepositorio tareaRepositorio;
 
+    private  boolean forzarred;
+
     public ListarTareas(ThreadExecutor threadExecutor,
                         PostExecutionThread postExecutionThread,
                         TareaRepositorio tareaRepositorio) {
@@ -19,10 +21,12 @@ public class ListarTareas extends UseCase<List<Tarea>> {
         this.tareaRepositorio = tareaRepositorio;
     }
 
+    public  void setForzarred(boolean forzarred){this.forzarred = forzarred;}
+
     @Override
     protected void construirUseCase() {
         try {
-            List<Tarea> tareaList = this.tareaRepositorio.listarTareas();
+            List<Tarea> tareaList = this.tareaRepositorio.listarTareas(forzarred);
             notificarUseCaseSatisfactorio(tareaList);
         } catch (Exception e) {
             notificarUseCaseError(e);
