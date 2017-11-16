@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import pe.edu.cibertec.tareas.presentacion.model.TareaModel;
 import pe.edu.cibertec.tareas.presentacion.view.fragment.TareaDetalleFragment;
 
-public class TareaDetalleActivity extends AppCompatActivity {
+public class TareaDetalleActivity extends AppCompatActivity implements TareaDetalleFragment.OnDetallesListener{
 
     public static final String EXTRA_TAREA = "activity.TareaDetalleActivity.EXTRA_TAREA";
 
@@ -21,5 +21,10 @@ public class TareaDetalleActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(android.R.id.content, TareaDetalleFragment.newInstance(tarea));
         ft.commit();
+    }
+
+    @Override
+    public void notificarCambios() {
+        finish();
     }
 }

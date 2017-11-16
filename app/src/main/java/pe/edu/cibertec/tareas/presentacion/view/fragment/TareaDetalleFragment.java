@@ -3,7 +3,6 @@ package pe.edu.cibertec.tareas.presentacion.view.fragment;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +62,8 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
     private TareaModel tarea;
 
     private TareaDetallePresenter tareaDetallePresenter;
+
+    private OnDetallesListener onDetallesListener;
 
     public static TareaDetalleFragment newInstance(TareaModel tarea) {
         TareaDetalleFragment f = new TareaDetalleFragment();
@@ -110,10 +110,10 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String fecha = sdf.format(calendar.getTime());
-                Log.i("initUI(","fecha: " + fecha);
+                //Log.i("initUI(","fecha: " + fecha);
                 calendar.setTime(tarea.getFechaHora());
                 fecha = sdf.format(calendar.getTime());
-                Log.i("initUI(","fecha: " + fecha);
+                //Log.i("initUI(","fecha: " + fecha);
 
                 int dia = calendar.get(Calendar.DAY_OF_MONTH);
                 int mes = calendar.get(Calendar.MONTH) + 1;
@@ -129,12 +129,16 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
             tglAlarma.setChecked(tarea.isAlarma());
 
             if(tarea.getId() != null){
-                btnEliminar.setVisibility(Button.VISIBLE);
+                btnEliminar.setVisibility(View.VISIBLE);
                 getActivity().setTitle("Editar tarea");
             }
         }else{
             edtTitulo.setText("");
             edtTarea.setText("");
+            edtFecha.setText("");
+            edtHora.setText("");
+            btnEliminar.setVisibility(View.GONE);
+            tglAlarma.setChecked(false);
         }
     }
 
@@ -181,23 +185,24 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
     @Override
     public void notificarTareaGuardada() {
-        getActivity().finish();
+        onDetallesListener.notificarCambios();
     }
 
     @Override
     public void notificarTareaModificada() {
-        getActivity().finish();
+        onDetallesListener.notificarCambios();
     }
 
     @Override
     public void notificarTareaEliminada() {
-        getActivity().finish();
+        onDetallesListener.notificarCambios();
     }
 
     @OnClick(R.id.btn_guardar)
     public void onGuardarClick() {
         if (tarea == null){
-            TareaModel tarea = new TareaModel();
+            tarea = new TareaModel();
+            Log.d("TareaDetalleFragment","tarea == null");
         }
         tarea.setTitulo(edtTitulo.getText().toString());
         tarea.setTarea(edtTarea.getText().toString());
@@ -244,19 +249,22 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
     @OnClick(R.id.btn_date)
     public void showDatePickerDialog() {
-        DatePickerFragment newFragment = new DatePickerFragment();
+        String fecha = edtFecha.getText().toString();
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(fecha);
         newFragment.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 edtFecha.setText(day+"/"+(month+1)+"/"+year);
             }
+
         });
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
     @OnClick(R.id.btn_time)
     public void showTimePickerDialog() {
-        TimePickerFragment newFragment = new TimePickerFragment();
+        String hora = edtHora.getText().toString();
+        TimePickerFragment newFragment = TimePickerFragment.newInstance(hora);
         newFragment.setOnTimeSetListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
@@ -264,6 +272,21 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
             }
         });
         newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            onDetallesListener = (OnDetallesListener) context;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " debe implementar OnDetallesListener");
+        }
+    }
+
+    public interface OnDetallesListener {
+        void notificarCambios();
     }
 
 }

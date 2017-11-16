@@ -10,7 +10,8 @@ import pe.edu.cibertec.tareas.presentacion.model.TareaModel;
 import pe.edu.cibertec.tareas.presentacion.view.fragment.TareaDetalleFragment;
 import pe.edu.cibertec.tareas.presentacion.view.fragment.TareasFragment;
 
-public class MainActivity extends AppCompatActivity implements TareasFragment.OnTareaClickListener {
+public class MainActivity extends AppCompatActivity implements TareasFragment.OnTareaClickListener,
+        TareaDetalleFragment.OnDetallesListener{
 
     private boolean isDualPane;
 
@@ -53,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements TareasFragment.On
             TareaDetalleFragment tareaDetalleFragment = (TareaDetalleFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.frag_detalle);
             tareaDetalleFragment.setTarea(null);
+        }
+    }
+
+    @Override
+    public void notificarCambios() {
+        if(isDualPane){
+            TareasFragment tareasFragment = (TareasFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.frag_tareas);
+            tareasFragment.onItemClick(0);
         }
     }
 }
