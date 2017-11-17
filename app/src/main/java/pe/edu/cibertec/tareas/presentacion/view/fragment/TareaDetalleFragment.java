@@ -30,11 +30,13 @@ import butterknife.Unbinder;
 import pe.edu.cibertec.tareas.R;
 import pe.edu.cibertec.tareas.presentacion.model.TareaModel;
 import pe.edu.cibertec.tareas.presentacion.presenter.TareaDetallePresenter;
+import pe.edu.cibertec.tareas.presentacion.view.receiver.AlarmReceiver;
 import pe.edu.cibertec.tareas.presentacion.view.view.TareaDetalleView;
 
 public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
     private static final String ARG_TAREA = "fragment.TareaDetalleFragment.ARG_TAREA";
+    private static final String ARG_ALARMA_DETALLE = "fragment.TareaDetalleFragment.ARG_ALARMA_DETALLE";
 
     @BindView(R.id.edt_titulo)
     EditText edtTitulo;
@@ -60,18 +62,27 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
     @BindView(R.id.btn_eliminar)
     Button btnEliminar;
 
+    @BindView(R.id.btn_date)
+    Button btnDate;
+
+    @BindView(R.id.btn_time)
+    Button btnTime;
+
     private Unbinder unbinder;
 
     private TareaModel tarea;
+
+    private boolean alarma_detalle;
 
     private TareaDetallePresenter tareaDetallePresenter;
 
     private OnDetallesListener onDetallesListener;
 
-    public static TareaDetalleFragment newInstance(TareaModel tarea) {
+    public static TareaDetalleFragment newInstance(TareaModel tarea,boolean alarma_detalle) {
         TareaDetalleFragment f = new TareaDetalleFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_TAREA, tarea);
+        args.putBoolean(ARG_ALARMA_DETALLE, alarma_detalle);
         f.setArguments(args);
         return f;
     }
@@ -85,6 +96,7 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
         if (getArguments() != null) {
             tarea = getArguments().getParcelable(ARG_TAREA);
+            alarma_detalle = getArguments().getBoolean(ARG_ALARMA_DETALLE);
         }
     }
 
@@ -142,6 +154,16 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
             edtHora.setText("");
             btnEliminar.setVisibility(View.GONE);
             tglAlarma.setChecked(false);
+        }
+        if(alarma_detalle){
+            btnGuardar.setVisibility(View.GONE);
+            btnEliminar.setVisibility(View.GONE);
+            btnDate.setVisibility(View.GONE);
+            btnTime.setVisibility(View.GONE);
+            edtTitulo.setEnabled(false);
+            edtTarea.setEnabled(false);
+            tglAlarma.setEnabled(false);
+            getActivity().setTitle("Detalles");
         }
     }
 
@@ -203,24 +225,31 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
     @Override
     public void registrarAlarma(TareaModel tarea) {
+        Log.d("Alarma","Se inicia registro de alarma");
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         if(alarmManager!=null) {
-            Intent intent = new Intent(getContext(), AlarmManager.class);
-            intent.putExtra("tarea", tarea);
+            Intent intent = new Intent(getContext(), AlarmReceiver.class);
+            if(tarea==null) Log.d("Alarma","tarea es nulo");
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("tarea",tarea);
+            intent.putExtra("bundle",bundle);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), tarea.getAlarmCode(),
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, tarea.getFechaHora().getTime(), pendingIntent);
+            Log.d("Alarma","termino registro de alarma");
         }
     }
 
     @Override
     public void eliminarAlarma(TareaModel tarea) {
+        Log.d("Alarma","Se inicia eliminacion de alarma");
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         if(alarmManager!=null) {
-            Intent intent = new Intent(getContext(), AlarmManager.class);
+            Intent intent = new Intent(getContext(), AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), tarea.getAlarmCode(),
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.cancel(pendingIntent);
+            Log.d("Alarma","Se termina eliminacion de alarma");
         }
     }
 
@@ -259,9 +288,8 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
         }
 
         tarea.setAlarma(tglAlarma.isChecked());
-        //tarea.setTitulo(edtTitulo.getText().toString());
-        //tarea.setTitulo(edtTitulo.getText().toString());
-        if(tarea.getAlarmCode()<1){
+
+        if(tarea.getAlarmCode()==0){
             tarea.generarAlarmCode();
         }
         if(tarea.getId() == null){

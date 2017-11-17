@@ -75,38 +75,50 @@ public class TareaModel implements Parcelable {
         this.alarmCode = alarmCode;
     }
 
+    //if(fechaHora!= null)
+    //            parcel.writeSerializable(fechaHora.getTime());
+    //Long dato = (Long)in.readSerializable();
+    //    if(dato != null)
+    //fechaHora = new Date(dato);
+
+    public void generarAlarmCode(){
+        int result = 1;
+        result += titulo.hashCode();
+        result += tarea.hashCode();
+        result += fechaHora.hashCode();
+        result += (alarma?1:0);
+        alarmCode = result;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(titulo);
-        parcel.writeString(tarea);
-        if(fechaHora!= null)
-            parcel.writeSerializable(fechaHora.getTime());
-        parcel.writeByte((byte) (alarma ? 1 : 0));
-        parcel.writeInt(alarmCode);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.titulo);
+        dest.writeString(this.tarea);
+        dest.writeLong(this.fechaHora != null ? this.fechaHora.getTime() : -1);
+        dest.writeByte(this.alarma ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.alarmCode);
     }
 
     protected TareaModel(Parcel in) {
-        id = in.readString();
-        titulo = in.readString();
-        tarea = in.readString();
-        //fechaHora = new Date(in.readLong());
-        Long dato = (Long)in.readSerializable();
-        if(dato != null)
-            fechaHora = new Date(dato);
-        alarma = in.readByte() != 0;
-        alarmCode = in.readInt();
+        this.id = in.readString();
+        this.titulo = in.readString();
+        this.tarea = in.readString();
+        long tmpFechaHora = in.readLong();
+        this.fechaHora = tmpFechaHora == -1 ? null : new Date(tmpFechaHora);
+        this.alarma = in.readByte() != 0;
+        this.alarmCode = in.readInt();
     }
 
     public static final Creator<TareaModel> CREATOR = new Creator<TareaModel>() {
         @Override
-        public TareaModel createFromParcel(Parcel in) {
-            return new TareaModel(in);
+        public TareaModel createFromParcel(Parcel source) {
+            return new TareaModel(source);
         }
 
         @Override
@@ -114,15 +126,4 @@ public class TareaModel implements Parcelable {
             return new TareaModel[size];
         }
     };
-
-    public void generarAlarmCode(){
-        int result = 1;
-        result = result*29+id.hashCode();
-        result = result*29+titulo.hashCode();
-        result = result*29+tarea.hashCode();
-        result = result*29+fechaHora.hashCode();
-        result = result*29+(alarma?1:0);
-        alarmCode = result;
-    }
-
 }

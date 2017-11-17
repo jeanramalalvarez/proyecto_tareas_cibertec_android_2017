@@ -20,12 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentacion.view.activity.TareaDetalleActivity" />
+        <activity android:name=".presentacion.view.activity.TareaDetalleActivity"
+            android:parentActivityName=".presentacion.view.activity.MainActivity"/>
 
         <receiver
             android:name=".presentacion.view.receiver.AlarmReceiver"
-            android:enabled="false"
-            android:exported="false"></receiver>
+            android:enabled="true"/>
     </application>
 
 </manifest>
