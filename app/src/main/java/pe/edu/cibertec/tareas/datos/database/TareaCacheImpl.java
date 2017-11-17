@@ -41,4 +41,18 @@ public class TareaCacheImpl implements TareaCache {
             }
         });
     }
+
+    @Override
+    public void eliminar(final String id) {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                RealmResults<TareaEntity> results = realm.where(TareaEntity.class)
+                        .equalTo("id",id).findAll();
+                results.deleteAllFromRealm();
+            }
+        });
+        realm.close();
+    }
 }

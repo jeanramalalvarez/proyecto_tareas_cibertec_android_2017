@@ -17,6 +17,8 @@ public class TareaModel implements Parcelable {
 
     private boolean alarma;
 
+    private int alarmCode;
+
     public TareaModel() {
     }
 
@@ -65,6 +67,14 @@ public class TareaModel implements Parcelable {
         this.alarma = alarma;
     }
 
+    public int getAlarmCode() {
+        return alarmCode;
+    }
+
+    public void setAlarmCode(int alarmCode) {
+        this.alarmCode = alarmCode;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -78,6 +88,7 @@ public class TareaModel implements Parcelable {
         if(fechaHora!= null)
             parcel.writeSerializable(fechaHora.getTime());
         parcel.writeByte((byte) (alarma ? 1 : 0));
+        parcel.writeInt(alarmCode);
     }
 
     protected TareaModel(Parcel in) {
@@ -89,6 +100,7 @@ public class TareaModel implements Parcelable {
         if(dato != null)
             fechaHora = new Date(dato);
         alarma = in.readByte() != 0;
+        alarmCode = in.readInt();
     }
 
     public static final Creator<TareaModel> CREATOR = new Creator<TareaModel>() {
@@ -103,5 +115,14 @@ public class TareaModel implements Parcelable {
         }
     };
 
+    public void generarAlarmCode(){
+        int result = 1;
+        result = result*29+id.hashCode();
+        result = result*29+titulo.hashCode();
+        result = result*29+tarea.hashCode();
+        result = result*29+fechaHora.hashCode();
+        result = result*29+(alarma?1:0);
+        alarmCode = result;
+    }
 
 }

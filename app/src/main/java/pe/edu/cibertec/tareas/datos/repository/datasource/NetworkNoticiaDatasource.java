@@ -36,6 +36,7 @@ public class NetworkNoticiaDatasource implements TareaDatasource {
 
     @Override
     public TareaEntity eliminarTarea(TareaEntity tareaEntity) throws Exception {
+        tareaCache.eliminar(tareaEntity.getId());
         return restApi.eliminarTarea(tareaEntity);
     }
 }

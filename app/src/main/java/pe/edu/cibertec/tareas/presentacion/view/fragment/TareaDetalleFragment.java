@@ -1,8 +1,11 @@
 package pe.edu.cibertec.tareas.presentacion.view.fragment;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -198,6 +201,29 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
         onDetallesListener.notificarCambios();
     }
 
+    @Override
+    public void registrarAlarma(TareaModel tarea) {
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        if(alarmManager!=null) {
+            Intent intent = new Intent(getContext(), AlarmManager.class);
+            intent.putExtra("tarea", tarea);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), tarea.getAlarmCode(),
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, tarea.getFechaHora().getTime(), pendingIntent);
+        }
+    }
+
+    @Override
+    public void eliminarAlarma(TareaModel tarea) {
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        if(alarmManager!=null) {
+            Intent intent = new Intent(getContext(), AlarmManager.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), tarea.getAlarmCode(),
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
     @OnClick(R.id.btn_guardar)
     public void onGuardarClick() {
         if (tarea == null){
@@ -235,6 +261,9 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
         tarea.setAlarma(tglAlarma.isChecked());
         //tarea.setTitulo(edtTitulo.getText().toString());
         //tarea.setTitulo(edtTitulo.getText().toString());
+        if(tarea.getAlarmCode()<1){
+            tarea.generarAlarmCode();
+        }
         if(tarea.getId() == null){
             guardarTarea(tarea);
         }else{

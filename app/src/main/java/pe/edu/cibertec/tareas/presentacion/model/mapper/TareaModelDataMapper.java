@@ -15,6 +15,7 @@ public class TareaModelDataMapper {
         tareaModel.setTarea(tarea.getTarea());
         tareaModel.setAlarma(tarea.isAlarma());
         tareaModel.setFechaHora(tarea.getFechaHora());
+        tareaModel.setAlarmCode(tarea.getAlarmCode());
         return tareaModel;
     }
 
@@ -25,6 +26,7 @@ public class TareaModelDataMapper {
         tareaModel.setTarea(tarea.getTarea());
         tareaModel.setAlarma(tarea.isAlarma());
         tareaModel.setFechaHora(tarea.getFechaHora());
+        tareaModel.setAlarmCode(tarea.getAlarmCode());
         return tareaModel;
     }
 

@@ -24,6 +24,9 @@ public class TareaEntity extends RealmObject {
 
     private boolean alarma;
 
+    @SerializedName("alarmCode")
+    private int alarmCode;
+
     public TareaEntity() {
     }
 
@@ -70,5 +73,13 @@ public class TareaEntity extends RealmObject {
 
     public void setAlarma(boolean alarma) {
         this.alarma = alarma;
+    }
+
+    public int getAlarmCode() {
+        return alarmCode;
+    }
+
+    public void setAlarmCode(int alarmCode) {
+        this.alarmCode = alarmCode;
     }
 }

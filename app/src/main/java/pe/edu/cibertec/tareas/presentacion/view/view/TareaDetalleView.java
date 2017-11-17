@@ -15,4 +15,8 @@ public interface TareaDetalleView extends LoadingView {
     void notificarTareaModificada();
 
     void notificarTareaEliminada();
+
+    void registrarAlarma(TareaModel tarea);
+
+    void eliminarAlarma(TareaModel tarea);
 }

@@ -1,5 +1,9 @@
 package pe.edu.cibertec.tareas.presentacion.presenter;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import pe.edu.cibertec.tareas.datos.entity.mapper.TareaEntityDataMapper;
@@ -55,7 +59,7 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         );
     }
 
-    public void guardarTarea(TareaModel tarea) {
+    public void guardarTarea(final TareaModel tarea) {
         view.mostrarLoading();
 
         this.guardarTarea.setParams(tareaModelDataMapper.transformar(tarea));
@@ -63,6 +67,10 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         this.guardarTarea.ejecutar(new UseCase.Callback<Tarea>(){
             @Override
             public void onSuccess(Tarea response) {
+                if(tarea.isAlarma())
+                    view.registrarAlarma(tarea);
+                else
+                    view.eliminarAlarma(tarea);
                 view.ocultarLoading();
                 view.notificarTareaGuardada();
             }
@@ -75,7 +83,7 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         });
     }
 
-    public void modificarTarea(TareaModel tarea) {
+    public void modificarTarea(final TareaModel tarea) {
         view.mostrarLoading();
 
         this.modificarTarea.setParams(tareaModelDataMapper.transformar(tarea));
@@ -83,6 +91,10 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         this.modificarTarea.ejecutar(new UseCase.Callback<Tarea>(){
             @Override
             public void onSuccess(Tarea response) {
+                if(tarea.isAlarma())
+                    view.registrarAlarma(tarea);
+                else
+                    view.eliminarAlarma(tarea);
                 view.ocultarLoading();
                 view.notificarTareaModificada();
             }
@@ -95,7 +107,7 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         });
     }
 
-    public void eliminarTarea(TareaModel tarea) {
+    public void eliminarTarea(final TareaModel tarea) {
         view.mostrarLoading();
 
         this.eliminarTarea.setParams(tareaModelDataMapper.transformar(tarea));
@@ -103,6 +115,7 @@ public class TareaDetallePresenter extends BasePresenter<TareaDetalleView> {
         this.eliminarTarea.ejecutar(new UseCase.Callback<Tarea>(){
             @Override
             public void onSuccess(Tarea response) {
+                view.eliminarAlarma(tarea);
                 view.ocultarLoading();
                 view.notificarTareaEliminada();
             }

@@ -9,4 +9,5 @@ public interface TareaCache {
     List<TareaEntity> listar();
     void guardar(List<TareaEntity> tareaEntityList);
     void limpiar();
+    void eliminar(String id);
 }

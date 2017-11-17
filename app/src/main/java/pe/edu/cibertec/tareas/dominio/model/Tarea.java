@@ -14,6 +14,8 @@ public class Tarea{
 
     private boolean alarma;
 
+    private int alarmCode;
+
     public Tarea() {
     }
 
@@ -60,5 +62,13 @@ public class Tarea{
 
     public void setAlarma(boolean alarma) {
         this.alarma = alarma;
+    }
+
+    public int getAlarmCode() {
+        return alarmCode;
+    }
+
+    public void setAlarmCode(int alarmCode) {
+        this.alarmCode = alarmCode;
     }
 }
