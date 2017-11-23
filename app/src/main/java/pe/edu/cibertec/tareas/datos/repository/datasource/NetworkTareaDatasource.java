@@ -6,13 +6,13 @@ import pe.edu.cibertec.tareas.datos.database.TareaCache;
 import pe.edu.cibertec.tareas.datos.entity.TareaEntity;
 import pe.edu.cibertec.tareas.datos.network.RestApi;
 
-public class NetworkNoticiaDatasource implements TareaDatasource {
+public class NetworkTareaDatasource implements TareaDatasource {
 
     private final RestApi restApi;
 
     private  final TareaCache tareaCache;
 
-    public NetworkNoticiaDatasource(RestApi restApi, TareaCache tareaCache) {
+    public NetworkTareaDatasource(RestApi restApi, TareaCache tareaCache) {
         this.restApi = restApi;
         this.tareaCache = tareaCache;
     }

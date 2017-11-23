@@ -26,7 +26,7 @@ public class TareaEntityDataMapperTest {
 
     private static final String PRUEBA_TITULO = "Titulo de Prueba";
     private static final String PRUEBA_TAREA = "Tarea de Prueba";
-    private static final String PRUEBA_URL = "http://prueba.jpg";
+
 
     private TareaEntityDataMapper tareaEntityDataMapper;
 
@@ -43,8 +43,6 @@ public class TareaEntityDataMapperTest {
      assertThat(tarea, is(instanceOf(Tarea.class)));
      assertThat(tarea.getTitulo(), is(PRUEBA_TITULO));
      assertThat(tarea.getTarea(),is(PRUEBA_TAREA));
-
-
     }
 
     @Test

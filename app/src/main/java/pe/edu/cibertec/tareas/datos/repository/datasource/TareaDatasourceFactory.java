@@ -18,7 +18,7 @@ public class TareaDatasourceFactory {
     public TareaDatasource crearNetworkDatasource() {
         RestApi restApi = new RestApiImpl(context);
         TareaCache tareaCache = new TareaCacheImpl();
-        return new NetworkNoticiaDatasource(restApi, tareaCache);
+        return new NetworkTareaDatasource(restApi, tareaCache);
     }
 
     public  TareaDatasource  crearDiskDatasource(){
