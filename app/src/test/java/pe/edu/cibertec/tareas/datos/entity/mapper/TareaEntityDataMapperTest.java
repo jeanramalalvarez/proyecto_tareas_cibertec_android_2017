@@ -25,18 +25,30 @@ import static org.junit.Assert.*;
 public class TareaEntityDataMapperTest {
 
     private static final String PRUEBA_TITULO = "Titulo de Prueba";
-    private static final String PRUEBA_DETALLE = "Detalle de Prueba";
+    private static final String PRUEBA_TAREA = "Tarea de Prueba";
     private static final String PRUEBA_URL = "http://prueba.jpg";
 
     private TareaEntityDataMapper tareaEntityDataMapper;
 
     @Before
-    public void setUp() throws  Exception{
+    public void setUp() throws Exception {
         this.tareaEntityDataMapper = new TareaEntityDataMapper();
     }
 
     @Test
-    public  void testTransformarTareaEntityList(){
+    public void testTransformarTareaEntity(){
+     TareaEntity tareaEntity = crearTareaEntityPrueba();
+     Tarea tarea = tareaEntityDataMapper.transformar(tareaEntity);
+
+     assertThat(tarea, is(instanceOf(Tarea.class)));
+     assertThat(tarea.getTitulo(), is(PRUEBA_TITULO));
+     assertThat(tarea.getTarea(),is(PRUEBA_TAREA));
+
+
+    }
+
+    @Test
+    public void testTransformarTareaEntityList() {
         TareaEntity tareaEntity1 = new TareaEntity();
         TareaEntity tareaEntity2 = new TareaEntity();
 
@@ -44,14 +56,21 @@ public class TareaEntityDataMapperTest {
         tareaEntityList.add(tareaEntity1);
         tareaEntityList.add(tareaEntity2);
 
-        List<Tarea>  tareaList = tareaEntityDataMapper.transformar(tareaEntityList);
+        List<Tarea> tareaList = tareaEntityDataMapper.transformar(tareaEntityList);
 
-        assertThat(tareaList.get(0),is(instanceOf(Tarea.class)));
-        assertThat(tareaList.get(1),is(instanceOf(Tarea.class)));
-        assertThat(  tareaList.size(), is(2));
+        assertThat(tareaList.get(0), is(instanceOf(Tarea.class)));
+        assertThat(tareaList.get(1), is(instanceOf(Tarea.class)));
+        assertThat(tareaList.size(), is(2));
     }
 
 
+    private  TareaEntity  crearTareaEntityPrueba(){
+        TareaEntity tareaEntity = new TareaEntity();
+        tareaEntity.setTitulo(PRUEBA_TITULO);
+        tareaEntity.setTarea(PRUEBA_TAREA);
+
+        return  tareaEntity;
+    }
 
 
 }
