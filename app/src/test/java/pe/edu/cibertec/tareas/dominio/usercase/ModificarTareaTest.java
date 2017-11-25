@@ -18,9 +18,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
  * Created by MI EQUIPO on 25/11/2017.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GuardarTareaTest {
+public class ModificarTareaTest {
 
-    private GuardarTarea guardarTarea;
+    private ModificarTarea modificarTarea;
 
     @Mock
     private ThreadExecutor mockThreadExecutor;
@@ -33,17 +33,17 @@ public class GuardarTareaTest {
 
     @Before
     public void setUp() throws Exception {
-        guardarTarea = new GuardarTarea(
+        modificarTarea = new ModificarTarea(
                 mockThreadExecutor, mockPostExecutionThread, mockTareaRepositorio);
     }
 
     @Test
-    public  void testGuardarTarea() throws  Exception{
-        Tarea tareaEntity = new Tarea();
-        guardarTarea.setParams(tareaEntity);
-        guardarTarea.construirUseCase();
+    public  void testModificarTarea() throws  Exception{
+        Tarea tarea = new Tarea();
+        modificarTarea.setParams(tarea);
+        modificarTarea.construirUseCase();
 
-        verify(mockTareaRepositorio).guardarTarea(tareaEntity);
+        verify(mockTareaRepositorio).modificarTarea(tarea);
         verifyNoMoreInteractions(mockTareaRepositorio);
     }
 
