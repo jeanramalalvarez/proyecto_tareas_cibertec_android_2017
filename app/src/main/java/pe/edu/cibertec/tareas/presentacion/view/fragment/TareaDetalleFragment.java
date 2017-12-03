@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
@@ -255,16 +256,23 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
 
     @OnClick(R.id.btn_guardar)
     public void onGuardarClick() {
+
+        if(validarCamposVacios()){
+            Toast.makeText(getContext(), "Debe ingresar los campos requeridos", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (tarea == null){
             tarea = new TareaModel();
             Log.d("TareaDetalleFragment","tarea == null");
         }
+
         tarea.setTitulo(edtTitulo.getText().toString());
         tarea.setTarea(edtTarea.getText().toString());
 
         Calendar calendar = Calendar.getInstance();
 
-        if(edtFecha.getText() != null){
+        if(!edtFecha.getText().toString().isEmpty()){
 
             String[] fechaArray = edtFecha.getText().toString().split("/");
             int dia = Integer.valueOf(fechaArray[0]);
@@ -275,15 +283,17 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
             calendar.set(Calendar.YEAR, anio);
         }
 
-        if(edtHora.getText() != null){
+        if(!edtHora.getText().toString().isEmpty()){
+
             String[] horaArray = edtHora.getText().toString().split(":");
             int hora = Integer.valueOf(horaArray[0]);
             int minuto = Integer.valueOf(horaArray[1]);
             calendar.set(Calendar.HOUR_OF_DAY, hora);
             calendar.set(Calendar.MINUTE, minuto);
+            calendar.set(Calendar.SECOND, 0);
         }
 
-        if(edtFecha.getText() != null && edtHora.getText() != null){
+        if(!edtFecha.getText().toString().isEmpty() && !edtHora.getText().toString().isEmpty()){
             tarea.setFechaHora(calendar.getTime());
         }
 
@@ -297,6 +307,17 @@ public class TareaDetalleFragment extends Fragment implements TareaDetalleView{
         }else{
             modificarTarea(tarea);
         }
+    }
+
+    private boolean validarCamposVacios(){
+        boolean resultado = false;
+
+        if(edtTitulo.getText().toString().isEmpty() || edtTarea.getText().toString().isEmpty() ||
+                edtFecha.getText().toString().isEmpty() || edtHora.getText().toString().isEmpty()){
+            resultado = true;
+        }
+
+        return resultado;
     }
 
     @OnClick(R.id.btn_eliminar)
