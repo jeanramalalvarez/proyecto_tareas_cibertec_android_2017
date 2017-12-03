@@ -96,7 +96,7 @@ public class TareasFragment extends Fragment implements TareasView {
     @Override
     public void onStart() {
         super.onStart();
-        tareasPresenter.listarTareas();
+        listarTareas();
     }
 
     @Override
@@ -132,6 +132,10 @@ public class TareasFragment extends Fragment implements TareasView {
         listView.setItemChecked(position, true);
 
         verTarea(tareaList.get(position));
+    }
+
+    public void listarTareas() {
+        tareasPresenter.listarTareas();
     }
 
     @OnClick(R.id.fab_agregar)

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements TareasFragment.On
             TareasFragment tareasFragment = (TareasFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.frag_tareas);
             tareasFragment.onItemClick(0);
+            tareasFragment.listarTareas();
         }
     }
 }
